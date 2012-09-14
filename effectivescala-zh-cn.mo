@@ -29,71 +29,53 @@ Scala提供了许多用于简洁表达的工具。简洁的代码，要求的阅
 
 此文档会不断被更新，由此来反映我们当前的“最佳实践”，但其核心思想应该会不变：优先考虑代码可读性；代码要通用但是不能以清晰作为代价； 使用哪些简单而又强大的语言特性，避免晦涩难懂的特性（尤其是类型系统相关的）。总而言之，要清楚你所做的折中。 一个成熟的语言必然带来复杂的实现，其复杂性会带来更多复杂性：推理，语义，语言特性之间的交互，还有要理解你的合作者。所以说复杂度是成熟度这个双刃剑的另一面 —— 你要确认你的折中带来的收益大于其成本。
 
-还有要开心。
+请享用。
 
-## Formatting
+## 格式
 
-The specifics of code *formatting* -- so long as they are practical --
-are of little consequence. By definition style cannot be inherently
-good or bad and almost everybody differs in personal
-preference. However the *consistent* application of the same 
-formatting rules will almost always enhance
-readability. A reader already familiar with a particular style does
-not have to grasp yet another set of local conventions, or decipher
-yet another corner of the language grammar.
+代码*格式*的细节——只要其够实用——其实无关紧要。从定义上来说，风格并没有天生的好与坏之分，几乎每个人都有自己的偏好。但是采用*一致*的代码格式规则往往能带来更好的代码可读性。这样，当读者熟悉特定的风格以后，不用再花精力去理解另一种内部约定或者编程语法的另一种变化。
 
-This is of particular importance to Scala, as its grammar has a high
-degree of overlap. One telling example is method invocation: Methods
-can be invoked with "`.`", with whitespace, without parenthesis for
-nullary or unary methods, with parenthesis for these, and so on.
-Furthermore, the different styles of method invocations expose
-different ambiguities in its grammar! Surely the consistent
-application of a carefully chosen set of formatting rules will resolve
-a great deal of ambiguity for both man and machine.
+这对Scala尤其重要，因为其语法定义有相当的重合度。值得一提的例子就是函数调用，可以使用下列方法来调用一个函数：“`.`”， 空格，无参数或者单参数的时候忽略括号，使用括号等等。此外，不同格式的函数调用都可能带来其在语法上的模棱两可。显然，选择适当的代码格式，并持续一致的采用它，可以把人们和机器从很多语法混淆中解救出来。
 
-We adhere to the [Scala style
-guide](http://docs.scala-lang.org/style/) plus the following rules.
+我们遵守 [Scala style
+guide](http://docs.scala-lang.org/style/) 以及下列规则。
 
-### Whitespace
+### 空格
 
-Indent by two spaces. Try to avoid lines greater than 100 columns in
-length. Use one blank line between method, class, and object definitions.
+缩进为两个空格。 保持每行不超过100列。方法，类，对象定义直接保持一个空行。
 
-### Naming
+### 命名
 
 <dl class="rules">
-<dt>Use short names for small scopes</dt>
-<dd> <code>i</code>s, <code>j</code>s and <code>k</code>s are all but expected
-in loops. </dd>
-<dt>Use longer names for larger scopes</dt>
-<dd>External APIs should have longer and explanatory names that confer meaning.
-<code>Future.collect</code> not <code>Future.all</code>.
+<dt>小作用域使用短的名字</dt>
+<dd> 循环变量<code>i</code>, <code>j</code> 和 <code>k</code>  </dd>
+<dt>大作用域使用长的名字</dt>
+<dd>外部API应该有长而具有解释作用的名字。
+<code>Future.collect</code> 而不是 <code>Future.all</code>.
 </dd>
-<dt>Use common abbreviations but eschew esoteric ones</dt>
+<dt>使用通用的缩写，避免使用晦涩的缩写</dt>
 <dd>
-Everyone
-knows <code>ok</code>, <code>err</code> or <code>defn</code> 
-whereas <code>sfri</code> is not so common.
+大家都理解<code>ok</code>, <code>err</code> 或者 <code>defn</code> 
+但是 <code>sfri</code> 就不那么好懂了。
 </dd>
-<dt>Don't rebind names for different uses</dt>
-<dd>Use <code>val</code>s</dd>
-<dt>Avoid using <code>`</code>s to overload reserved names.</dt>
-<dd><code>typ</code> instead of <code>`type</code>`</dd>
-<dt>Use active names for operations with side effects</dt>
-<dd><code>user.activate()</code> not <code>user.setActive()</code></dd>
-<dt>Use descriptive names for methods that return values</dt>
-<dd><code>src.isDefined</code> not <code>src.defined</code></dd>
-<dt>Don't prefix getters with <code>get</code></dt>
-<dd>As per the previous rule, it's redundant: <code>site.count</code> not <code>site.getCount</code></dd>
-<dt>Don't repeat names that are already encapsulated in package or object name</dt>
-<dd>Prefer:
+<dt>一个名字一种用途</dt>
+<dd>使用 <code>val</code></dd>
+<dt>不要使用<code>`</code>来重载保留字</dt>
+<dd><code>typ</code> 而不是<code>`type</code>`</dd>
+<dt>如果操作具有连带作用，命名时要体现这一点</dt>
+<dd><code>user.activate()</code> 而不是 <code>user.setActive()</code></dd>
+<dt>具有返回值的方法使用描述性的名字</dt>
+<dd><code>src.isDefined</code> 而不是 <code>src.defined</code></dd>
+<dt>对于getters不需要使用<code>get</code>前缀</dt>
+<dd>依据前一条规则，这样做（get前缀）实际上是多余的： <code>site.count</code> 而不是 <code>site.getCount</code></dd>
+<dt>不要重复已经通过package或者对象包装过的名字</dt>
+<dd>请使用:
 <pre><code>object User {
   def get(id: Int): Option[User]
-}</code></pre> to
+}</code></pre> 而不是
 <pre><code>object User {
   def getUser(id: Int): Option[User]
-}</code></pre>They are redundant in use: <code>User.getUser</code> provides
-no more information than <code>User.get</code>.
+}</code></pre>因为这样有了冗余: 相对于<code>User.get</code>，<code>User.getUser</code> 并没有提供更多的信息。
 </dd>
 </dl>
 
@@ -101,45 +83,41 @@ no more information than <code>User.get</code>.
 ### Imports
 
 <dl class="rules">
-<dt>Sort import lines alphabetically</dt>
-<dd>This makes it easy to examine visually, and is simple to automate.</dd>
-<dt>Use braces when importing several names from a package</dt>
+<dt>依照字母序对import语句进行排序</dt>
+<dd>这检查起来很方便，自动化这个动作也不难</dd>
+<dt>从同一package import多个名称时使用花括号</dt>
 <dd><code>import com.twitter.concurrent.{Broker, Offer}</code></dd>
-<dt>Use wildcards when more than six names are imported</dt>
+<dt>import多余6个名称的时候使用通配符</dt>
 <dd>e.g.: <code>import com.twitter.concurrent._</code>
-<br />Don't apply this blindly: some packages export too many names</dd>
-<dt>When using collections, qualify names by importing 
-<code>scala.collection.immutable</code> and/or <code>scala.collection.mutable</code></dt>
-<dd>Mutable and immutable collections have dual names. 
-Qualifiying the names makes is obvious to the reader which variant is being used (e.g. "<code>immutable.Map</code>")</dd>
-<dt>Do not use relative imports from other packages</dt>
-<dd>Avoid <pre><code>import com.twitter
-import concurrent</code></pre> in favor of the unambiguous <pre><code>import com.twitter.concurrent</code></pre></dd>
-<dt>Put imports at the top of the file</dt>
-<dd>The reader can refer to all imports in one place.</dd>
+<br />小心使用: 有些package export了太多名称</dd>
+<dt>使用集合类的时候，指定 
+<code>scala.collection.immutable</code> 或者 <code>scala.collection.mutable</code></dt>
+<dd>集合类都具有Mutable和immutable双重名称，指定特定的名称使得读者清楚到底使用的是那个变种 (e.g. "<code>immutable.Map</code>")</dd>
+<dt>不要对其他package使用相对import</dt>
+<dd>避免 <pre><code>import com.twitter
+import concurrent</code></pre> 要使用下列没有歧义的写法 <pre><code>import com.twitter.concurrent</code></pre></dd>
+<dt>把import语句放在文件头部</dt>
+<dd>这样方便用户在同一个地方查看。</dd>
 </dl>
 
 ### Braces
 
-Braces are used to create compound expressions (they serve other uses
-in the "module language"), where the value of the compound expression
-is the last expression in the list. Avoid using braces for simple
-expressions; write
+括号被用来创建复合表达式（在“模块化语言”里，其可以被其他用户使用），复合表达式的值是最后一个表达式的值。要避免对简单表达式使用括号：使用
 
 	def square(x: Int) = x*x
 	
-.LP but not
+.LP 而不是
 
 	def square(x: Int) = {
 	  x * x
 	}
 	
-.LP even though it may be tempting to distinguish the method body syntactically. The first alternative has less clutter and is easier to read. <em>Avoid syntactical ceremony</em> unless it clarifies.
+.LP 虽然后者试图把函数体的语句给隔离出来，但前者更加简洁易读。 <em>避免各种语法仪式（syntactical ceremony）</em>除非这样表达才清楚。
 
 ### Pattern matching
 
-Use pattern matching directly in function definitions whenever applicable;
-instead of
+可能的情况下，函数体直接使用模式匹配。不要使用
+
 
 	list map { item =>
 	  item match {
@@ -148,36 +126,31 @@ instead of
 	  }
 	}
 	
-.LP collapse the match
+.LP 而是
 
 	list map {
 	  case Some(x) => x
 	  case None => default
 	}
 
-.LP it's clear that the list items are being mapped over &mdash; the extra indirection does not elucidate.
+.LP 显然list items被用于匹配 &mdash; 多出来的那句并没有阐明什么。
 
-### Comments
+### 注释
 
-Use [ScalaDoc](https://wiki.scala-lang.org/display/SW/Scaladoc) to
-provide API documentation. Use the following style:
+使用 [ScalaDoc](https://wiki.scala-lang.org/display/SW/Scaladoc) 来提供API文档。使用下列格式:
 
 	/**
 	 * ServiceBuilder builds services 
 	 * ...
 	 */
 	 
-.LP but <em>not</em> the standard ScalaDoc style:
+.LP  <em>不使用</em> 标准ScalaDoc格式:
 
 	/** ServiceBuilder builds services
 	 * ...
 	 */
 
-Do not resort to ASCII art or other visual embellishments. Document
-APIs but do not add unecessary comments. If you find yourself adding
-comments to explain the behavior of your code, ask first if it can be
-restructured so that it becomes obvious what it does. Prefer
-"obviously it works" to "it works, obviously" (with apologies to Hoare).
+不要使用ASCII art或者其他视觉装饰。对API进行说明，不要添加不必要的注释。如果你发现你注释里面在解释代码的行为，问问自己代码能不能重构的更加直白，能自我表达。倾向于“显然靠谱”，而不是“这个靠谱，显然的” (对不起了Hoare)。
 
 ## Types and Generics
 
