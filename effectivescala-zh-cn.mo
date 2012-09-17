@@ -152,46 +152,31 @@ import concurrent</code></pre> 要使用下列没有歧义的写法 <pre><code>i
 
 不要使用ASCII art或者其他视觉装饰。对API进行说明，不要添加不必要的注释。如果你发现你注释里面在解释代码的行为，问问自己代码能不能重构的更加直白，能自我表达。倾向于“显然靠谱”，而不是“这个靠谱，显然的” (对不起了Hoare)。
 
-## Types and Generics
+## 类型和泛函
 
-The primary objective of a type system is to detect programming
-errors. The type system effectively provides a limited form of static
-verification, allowing us to express certain kinds of invariants about
-our code that the compiler can verify. Type systems provide other
-benefits too of course, but error checking is its Raison d&#146;&Ecirc;tre.
+类型系统的首要作用是错误检测，其有效的提供了一种有限的静态验证机制，让我们得以使用代码来表达特定的[不变序列](http://en.wikipedia.org/wiki/Invariant_%28computer_science%29)，同时为编译器所知。当然，类型系统也带了其他好处，但错误检测是其存在的原因。
 
-Our use of the type system should reflect this goal, but we must
-remain mindful of the reader: judicious use of types can serve to
-enhance clarity, being unduly clever only obfuscates.
+我们对类型系统的使用也要依照这个原则，同时我们也要把读者放在心上：谨慎的使用类型系统可以使表达清晰，过度聪明只能造成混淆。
 
-Scala's powerful type system is a common source of academic
-exploration and exercise (eg. [Type level programming in
-Scala](http://apocalisp.wordpress.com/2010/06/08/type-level-programming-in-scala/)).
-While a fascinating academic topic, these techniques rarely find
-useful application in production code. They are to be avoided.
+Scala强大的类型系统是学术探索和实践的源泉 (比如 [Type level programming in
+Scala](http://apocalisp.wordpress.com/2010/06/08/type-level-programming-in-scala/))。这些研究探索虽说是梦幻般的学术话题，但其技术在产品环境中并不实用，应当避免。
 
-### Return type annotations
+### 返回类型
 
-While Scala allows these to be omitted, such annotations provide good
-documentation: this is especially important for public methods. Where a
-method is not exposed and its return type obvious, omit them.
+Scala允许省略返回类型，实际上明确的返回类型是很好的文档，这对于public方法尤其重要。换言之当一个方法没有暴露而且其返回类型很明显时，可以忽略明确的返回类型标注。
 
-This is especially important when instantiating objects with mixins as
-the scala compiler creates singleton types for these. For example, `make`
-in:
+在使用mixin实例化对象时，Scala编译器会创建单例类型，这种情况下声明返回类型尤其重要。比如下面的`make`：
 
 	trait Service
 	def make() = new Service {
 	  def getId = 123
 	}
 
-.LP does <em>not</em> have a return type of <code>Service</code>; the compiler creates the refinement type <code>Object with Service{def getId: Int}</code>. Instead use an explicit annotation:
+.LP <em>并不</em>返回<code>Service</code>类型; 编译器会创建类型<code>Object with Service{def getId: Int}</code>。所以在这里要显式的指明:
 
 	def make(): Service = new Service{}
 
-Now the author is free to mix in more traits without changing the
-public type of `make`, making it easier to manage backwards
-compatibility.
+这样，作者就可以自由的mix更多traits而不用更改`make`make的公用类型了，这样可以更加方便的管理代码兼容性。
 
 ### Variance
 
