@@ -1,7 +1,7 @@
 #MARKDOWN = $(HOME)/Library/Haskell/bin/pandoc  -f markdown -t html
 MARKDOWN = peg-markdown --smart --notes
 
-all: index.html index-ja.html index-ru.html
+all: index.html index-ja.html index-ru.html index-zh-cn.html
 
 index.html: header.html.inc effectivescala.html footer.html.inc
 	cat $^ > $@
@@ -12,8 +12,11 @@ index-ja.html: header-jp.html.inc effectivescala-ja.html footer-jp.html.inc
 index-ru.html: header-ru.html.inc effectivescala-ru.html footer-ru.html.inc
 	cat $^ > $@
 
+index-zh-cn.html: header-zh-cn.html.inc effectivescala-zh-cn.html footer-zh-cn.html.inc
+	cat $^ > $@
+
 pub: all
-	./publish.sh index.html index-ja.html index-ru.html coll.png
+	./publish.sh index.html index-ja.html index-ru.html index-zh-cn.html coll.png
 
 %.html: %.mo
 	cat $< | bash proc.sh | bash toc.sh | bash fmt.sh | $(MARKDOWN) > $@
